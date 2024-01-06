@@ -1,6 +1,8 @@
 package com.example.demo.client;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,10 +22,11 @@ public class ClientController {
     @PostMapping("/register")
     public ResponseEntity<GetClient> register(@RequestBody LoginClient client) {
         try {
-            var result =  clientService.register(client);
-            return ResponseEntity.ok(result.toGetClient());
+            var result = clientService.register(client);
+            return new ResponseEntity<>(result.toGetClient(), HttpStatus.CREATED);
         } catch (EmailTakenException e) {
-            return ResponseEntity.badRequest().build();
+            return new ResponseEntity<>(null, HttpStatus.CONFLICT);
+
         }
     }
 
@@ -33,7 +36,7 @@ public class ClientController {
             var result = clientService.login(client);
             return ResponseEntity.ok(result);
         } catch (AuthenticationFailedException e) {
-            return ResponseEntity.badRequest().build();
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         }
     }
 }
