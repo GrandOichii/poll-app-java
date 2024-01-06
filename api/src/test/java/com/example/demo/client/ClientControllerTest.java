@@ -27,9 +27,12 @@ public class ClientControllerTest {
 
     @Test
     public void shouldRegister() throws Exception {
+//        arrange
         var login = new LoginClient("mymail@email.com", "password");
         Mockito.when(clientService.register(any(LoginClient.class))).thenReturn(new Client("mymail@email.com", "hashed-password"));
 
+//        act
+//        assert
         mvc
                 .perform(post("/api/v1/auth/register")
                         .content(toJson(login))
@@ -42,9 +45,12 @@ public class ClientControllerTest {
 
     @Test
     public void shouldNotRegister() throws Exception {
+//        arrange
         var login = new LoginClient("mymail@email.com", "password");
-        Mockito.when(clientService.register(any(LoginClient.class))).thenThrow(new EmailTakenException(""));
+        Mockito.when(clientService.register(any(LoginClient.class))).thenThrow(EmailTakenException.class);
 
+//        act
+//        assert
         mvc
                 .perform(post("/api/v1/auth/register")
                         .content(toJson(login))
@@ -58,9 +64,12 @@ public class ClientControllerTest {
 
     @Test
     public void shouldLogin() throws Exception {
+//        arrange
         var login = new LoginClient("mymail@email.com", "password");
         Mockito.when(clientService.login(any(LoginClient.class))).thenReturn("test jwt token");
 
+//        act
+//        assert
         mvc
                 .perform(post("/api/v1/auth/login")
                         .content(toJson(login))
@@ -73,9 +82,12 @@ public class ClientControllerTest {
 
     @Test
     public void shouldFailLogin() throws Exception {
+//        arrange
         var login = new LoginClient("mymail@email.com", "password");
-        Mockito.when(clientService.login(any(LoginClient.class))).thenThrow(new AuthenticationFailedException());
+        Mockito.when(clientService.login(any(LoginClient.class))).thenThrow(AuthenticationFailedException.class);
 
+//        act
+//        assert
         mvc
                 .perform(post("/api/v1/auth/login")
                         .content(toJson(login))
