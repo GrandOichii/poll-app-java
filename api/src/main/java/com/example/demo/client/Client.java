@@ -40,4 +40,13 @@ public class Client {
     public GetClient toGetClient() {
         return new GetClient(this.email);
     }
+
+    public void checkValid() throws InvalidRegisterCredentialsException {
+        var e = new InvalidRegisterCredentialsException();
+
+        if (email == null || email.isEmpty()) throw e;
+//        TODO change
+        if (passwordHash == null || passwordHash.isEmpty()) throw e;
+
+    }
 }

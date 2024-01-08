@@ -26,7 +26,8 @@ public class ClientController {
             return new ResponseEntity<>(result.toGetClient(), HttpStatus.CREATED);
         } catch (EmailTakenException e) {
             return new ResponseEntity<>(null, HttpStatus.CONFLICT);
-
+        } catch (InvalidRegisterCredentialsException e) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         }
     }
 

@@ -13,13 +13,14 @@ public class ClientService {
         this.clientRepository = clientRepository;
     }
 
-    public Client register(LoginClient register) throws EmailTakenException {
+    public Client register(LoginClient register) throws EmailTakenException, InvalidRegisterCredentialsException {
         var existing = clientRepository.getClientByEmail(register.getEmail());
         if (existing.isPresent()) throw new EmailTakenException(register.getEmail());
 
 //        TODO hash email
         var passHash = register.getPassword();
         var result = new Client(register.getEmail(), passHash);
+        result.checkValid();
         clientRepository.save(result);
         return result;
     }

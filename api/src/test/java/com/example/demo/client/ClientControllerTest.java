@@ -2,6 +2,7 @@ package com.example.demo.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -58,6 +59,25 @@ public class ClientControllerTest {
                         .accept(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isConflict());
+
+    }
+
+
+    @Test
+    public void shouldFailRegister() throws Exception {
+//        arrange
+        var login = new LoginClient("mymail@email.com", "password");
+        Mockito.when(clientService.register(any(LoginClient.class))).thenThrow(InvalidRegisterCredentialsException.class);
+
+//        act
+//        assert
+        mvc
+                .perform(post("/api/v1/auth/register")
+                        .content(toJson(login))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isUnauthorized());
 
     }
 

@@ -5,6 +5,7 @@ import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -59,6 +60,24 @@ public class ClientServiceTest {
         Assertions.assertThatThrownBy(action).isInstanceOf(EmailTakenException.class);
     }
 
+    @ParameterizedTest
+    @CsvSource({"myemail@mail.com,", ",password"})
+    public void failedRegister(String email, String password) {
+//        arrange
+        var login = new LoginClient(email, password);
+        var client = new Client(login.getEmail(), login.getPassword());
+        Mockito.when(clientRepository.getClientByEmail(client.getEmail())).thenReturn(Optional.empty());
+//        Mockito.when(clientRepository.save(Mockito.any(Client.class))).thenReturn(client);
+
+//        act
+        ThrowableAssert.ThrowingCallable action = () -> {
+            clientService.register(login);
+        };
+
+//        assert
+        Assertions.assertThatThrownBy(action).isInstanceOf(InvalidRegisterCredentialsException.class);
+    }
+
     @Test
     public void shouldLogin() throws Exception {
 //        arrange
@@ -87,6 +106,7 @@ public class ClientServiceTest {
 //        assert
         Assertions.assertThatThrownBy(action).isInstanceOf(AuthenticationFailedException.class);
     }
+
 
     LoginClient createUser() throws Exception {
         var result = new LoginClient("mymail@email.com", "password");
