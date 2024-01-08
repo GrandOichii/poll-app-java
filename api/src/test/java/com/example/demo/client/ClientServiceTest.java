@@ -63,11 +63,13 @@ public class ClientServiceTest {
     @ParameterizedTest
     @CsvSource({"myemail@mail.com,", ",password"})
     public void failedRegister(String email, String password) {
+        if (email == null) email = "";
+        if (password == null) password = "";
+
 //        arrange
         var login = new LoginClient(email, password);
         var client = new Client(login.getEmail(), login.getPassword());
         Mockito.when(clientRepository.getClientByEmail(client.getEmail())).thenReturn(Optional.empty());
-//        Mockito.when(clientRepository.save(Mockito.any(Client.class))).thenReturn(client);
 
 //        act
         ThrowableAssert.ThrowingCallable action = () -> {
@@ -90,7 +92,6 @@ public class ClientServiceTest {
         Assertions.assertThat(result.length()).isGreaterThan(0);
     }
 
-//    TODO add cases for incorrect email/password
     @Test
     public void shouldNotLogin() throws Exception {
 //        arrange

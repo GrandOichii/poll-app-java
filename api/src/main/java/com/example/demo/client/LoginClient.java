@@ -16,4 +16,13 @@ public class LoginClient {
         this.email = email;
         this.password = password;
     }
+
+    public void checkValid() throws InvalidRegisterCredentialsException {
+        var e = new InvalidRegisterCredentialsException();
+
+        if (email.isEmpty()) throw e;
+        if (password.isEmpty()) throw e;
+
+    }
+
 }
