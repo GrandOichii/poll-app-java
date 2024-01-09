@@ -93,7 +93,7 @@ public class ClientServiceTest {
     }
 
     @Test
-    public void shouldNotLogin() throws Exception {
+    public void shouldNotLogin() {
 //        arrange
         var login = new LoginClient("mymail@email.com", "password");
         var client = new Client(login.getEmail(), login.getPassword());
